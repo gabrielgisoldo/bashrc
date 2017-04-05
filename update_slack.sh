@@ -1,4 +1,4 @@
-echo -e "Os comandos ser„o executados como root\n\n"
+echo -e "Os comandos ser√£o executados como root\n\n"
 
 # INICIO: Atualizar os pacotes da distro usando o slackpkg
 read -p "Atualizar pacotes do rep. Slackware 14.2 (s/n): " op
@@ -14,7 +14,7 @@ echo
 # INICIO: Atualizar os pacotes de 32 bits
 read -p "Atualizar pacotes 32 bits (s/n): " op
 if [ "$op" == "s" ]; then
-    su - root -c "massconvert32.sh -u http://192.168.1.52/pub/Linux/Slackware/slackware-14.2/slackware"
+    su - root -c "massconvert32.sh -u http://someserver.org/path/to/slackware-14.2/slackware"
     su - root -c "upgradepkg --install-new *-compat32/*.t?z"
     su - root -c "rm -rf *-compat32"
 fi
