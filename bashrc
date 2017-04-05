@@ -73,8 +73,10 @@ extract() {
   return 0
 }
 
-# flatdir() { /home/gabriel/shell_scripts/flatdir.sh "$1" "$2" ; }
+# Ordem dos inputs: Pasta a ser usada como base, tipo de arquivo a ser buscado.
+flatdir() { /path/to/flatdir.sh "$1" "$2" ; }
 
+# Ordem dos inputs: Pasta origem, usuario da maquina destino, fim do ip da maquina destino, pasta destino dentro da maquina.
 scpr() { scp -r "$1" "$2"192.168."$3":"$4" ; }
 
 # criar video a partir de imagem e audio/video
