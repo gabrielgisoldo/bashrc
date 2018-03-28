@@ -1,7 +1,5 @@
-export SVN_EDITOR=/usr/bin/vim
-export vPRIMARYMONITOR="DP1"
-export vLOC="--left-of"
-export vEXT=$(xrandr -q | grep " connected" | grep -v $vPRIMARYMONITOR | awk '{print $1}' | head -n 1 )
+export LESS="-rM"
+
 IP=$(/sbin/ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
 export IP
 
@@ -22,10 +20,7 @@ alias lsize='ls --sort=size -lhr' # list by size
 alias lsd='ls -l | grep "^d"'   #list only directories
 alias lalf='ls -alF'
 alias p='python -W ignore'
-alias reboot='sudo shutdown -r now'
-alias shutdown='sudo shutdown -h now'
-alias rm='rm -fr'
-alias rmd='sudo rm -fr'
+alias rm='rm -r'
 alias h='history | grep $1'
 alias cp='cp -v '
 alias mv='mv -v'
@@ -34,13 +29,7 @@ alias cd..='cd ..'
 alias grepx='grep -Rlis'
 alias free='df -h'
 alias diffe='diff -iEZbaB'
-alias zopestart='$ZOPE_ENV/zopectl start'
-alias zopestop='$ZOPE_ENV/zopectl stop'
-alias zoperes='$ZOPE_ENV/zopectl restart'
-# alias svn_add="svn status | grep '?' | sed 's/^.* /svn add /' | bash"
 alias count='ls -1 | wc -l'
-alias sessionrm='find /tmp/sessions/. -mtime +0 -exec rm {} \;'
-alias monitor='/usr/bin/xrandr --output $vEXT --auto $vLOC $vPRIMARYMONITOR'
 
 mktar() { tar cvf  "${1%%/}.tar"     "${1%%/}/"; }
 mktgz() { tar cvzf "${1%%/}.tar.gz"  "${1%%/}/"; }
@@ -77,12 +66,22 @@ extract() {
 flatdir() { /path/to/flatdir.sh "$1" "$2" ; }
 
 # Ordem dos inputs: Pasta origem, usuario da maquina destino, fim do ip da maquina destino, pasta destino dentro da maquina.
-scpr() { scp -r "$1" "$2"192.168."$3":"$4" ; }
+scpr() { scp -r "$1" "$2"@192.168."$3":"$4" ; }
 
-# criar video a partir de imagem e audio/video
-# ffmpeg -loop 1 -y -i teste_img.png -i teste.mp4 -shortest result.mp4
+conv_video() { ffmpeg -i "$1" -c:v libx264 -preset ultrafast "$1" ; }
+
+gerar_video() { ffmpeg -loop 1 -i "$1" -i "$2" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest $"novo-${2}" ; }
+
+enviar_email() {
+  echo "$1" | mailx -r "gabriel.gisoldo@nube.com.br" -s "$2" -S smtp-auth-user=$1 -S smtp-auth-password=$2 $3 ;
+}
+
+# substituir substring dentro de um arquivo
+# sed -i -e 's/SUBSTRING_A_SUBSTITUIR/SUBSTRING_QUE_VAI_SUBSTITUIR/g' ARQUIVO_A_SER_USADO
+
+# Renomer arquivos sem usar MV
+# rename O_QUE_MUDAR_NO_NOME_DO_ARQUIVO O_QUE_COLOCAR_NO_LUGAR QUAIS_ARQUIVOS_A_RENOMEAR
 
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
-
