@@ -51,36 +51,34 @@ extract() {
       *.Z)       uncompress "$1" ;;
       *.7z)      7za e "$1"       ;;
       *)
-      echo "'$1' Nao pode ser extraido."
+      echo "'$1' Cant be extracted."
       return 1
       ;;
     esac
   else
-    echo "'$1' Nao eh um arquivo valido."
+    echo "'$1' Not a valid file."
     return 1
   fi
   return 0
 }
 
-# Ordem dos inputs: Pasta a ser usada como base, tipo de arquivo a ser buscado.
+# Order of inputs: Folder to be used as base, filter of file to be searched.
 flatdir() { /path/to/flatdir.sh "$1" "$2" ; }
 
-# Ordem dos inputs: Pasta origem, usuario da maquina destino, fim do ip da maquina destino, pasta destino dentro da maquina.
+# Order of inputs: Origin folder, user on remote machine, two last parts of the remote IP, Folder on remote machine.
 scpr() { scp -r "$1" "$2"@192.168."$3":"$4" ; }
 
+# Inputs: name of the video to be converted.
 conv_video() { ffmpeg -i "$1" -c:v libx264 -preset ultrafast "$1" ; }
 
+# Ordem dos inputs: name of the image to be used as poster, name of the audio file to be used with the image.
 gerar_video() { ffmpeg -loop 1 -i "$1" -i "$2" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest $"novo-${2}" ; }
 
-enviar_email() {
-  echo "$1" | mailx -r "gabriel.gisoldo@nube.com.br" -s "$2" -S smtp-auth-user=$1 -S smtp-auth-password=$2 $3 ;
-}
+# Replace substring inside of a file
+# sed -i -e 's/SUBSTRING_TO_BE_REPLACED/SUBSTRING_THAT_WILL_REPLACE/g' FILE_TARGETED
 
-# substituir substring dentro de um arquivo
-# sed -i -e 's/SUBSTRING_A_SUBSTITUIR/SUBSTRING_QUE_VAI_SUBSTITUIR/g' ARQUIVO_A_SER_USADO
-
-# Renomer arquivos sem usar MV
-# rename O_QUE_MUDAR_NO_NOME_DO_ARQUIVO O_QUE_COLOCAR_NO_LUGAR QUAIS_ARQUIVOS_A_RENOMEAR
+# Rename the file
+# rename EXPRESSION_TO_BE_CHANGED EXPRESSION_THAT_WILL_REPLACE FILES_TO_BE_CHANGED
 
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
